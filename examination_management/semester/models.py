@@ -12,7 +12,8 @@ class Semester(StatusMixin, TimeStampedModel):
     semester = models.IntegerField(_('Semester'), null=True, blank=True)
 
     STATUS_CHOICES = (('A', 'Appearing'), ('P', 'Passed'), ('R', 'Reappear'))
-    status = models.CharField(choices=STATUS_CHOICES, max_length=1, blank=True, null=True)
+    status = models.CharField(choices=STATUS_CHOICES,
+                              max_length=1, blank=True, null=True)
 
     def __str__(self):
         return str(self.semester)

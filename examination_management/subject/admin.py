@@ -9,4 +9,3 @@ class SubjectAdmin(admin.ModelAdmin):
 
     # list_display = ('name', 'code',)
     # list_filter = ('name', 'code',)
-
