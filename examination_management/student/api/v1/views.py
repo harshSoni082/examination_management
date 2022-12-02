@@ -1,6 +1,7 @@
 import tempfile
 from collections import OrderedDict
 
+from django.db.models import Max
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template.loader import get_template
 
@@ -14,11 +15,11 @@ from examination_management.batch.models import Batch
 from examination_management.branch.models import Branch
 from examination_management.subject.models import Subject
 from examination_management.student.api.v1.serializers import StudentSerializer, StudentDetailSerializer
-from examination_management.student.models import Student, SerialNo
+from examination_management.student.models import Student
 from examination_management.utils.utils import create_empty_excel, create_result_excel, get_roman
 
 
-def _get_semester_data(semester, branch, batch):
+def _get_semester_data(semester, branch, batch, start_sr_no):
     subjects = {}
     subject_instances = Subject.objects.filter(subject_semester__semester=semester)
     core_credit = 0
@@ -36,8 +37,12 @@ def _get_semester_data(semester, branch, batch):
                                                 branch__code=branch, batch__start=batch)
     for student in students_instances.all():
         # For current semester
+        if student.backlogs > 0:
+            continue
+
         semester_instance = SemesterInstance.objects.get(student__roll_no=student.roll_no,
                                                          semester__semester=semester)
+
         credit = 0
         for subject in semester_instance.semester.subject.all():
             if not subject.is_elective:
@@ -74,7 +79,12 @@ def _get_semester_data(semester, branch, batch):
             'cg_sum': semester_instance.cg_sum,
             'sgpa': sgpa,
             'reappear': reappear,
+            'sr_no': start_sr_no
         }
+
+        semester_instance.sr_no = start_sr_no
+        start_sr_no += 1
+        semester_instance.save()
 
         if semester > 4:
             # For previous semesters
@@ -268,22 +278,20 @@ class StudentResultTemplateDownloadView(GenericAPIView):
 
 class StudentDMCDownloadView(GenericAPIView):
     def get(self, request):
-        semester = int(request.GET.get('student_semester_instance__semester__semester', None))
+        semester = int(request.GET.get('student_semester_instance__semester__semester', 0))
         branch = request.GET.get('branch__code', None)
-        batch = int(request.GET.get('batch__start', None))
+        batch = int(request.GET.get('batch__start', 0))
+        default_sr_no = int(request.GET.get('default_sr_no', -1))
 
-        if not (semester and branch and batch):
+        last_sr_no = SemesterInstance.objects.aggregate(Max('sr_no'))
+        print(last_sr_no)
+        if (not (semester and branch and batch)) or (default_sr_no == -1 and last_sr_no == -1):
             return HttpResponseRedirect('../')
 
-        subjects, students = _get_semester_data(semester, branch, batch)
-
-        serialno = SerialNo.objects.filter()[0]
-        serial_no = serialno.serial_no
-        new_serial_no = serial_no + len(students)
-        print(serial_no, new_serial_no)
-        serialno.serial_no = new_serial_no
-        serialno.save()
-        # serialno = serialno.set(serial_no = new_serial_no)
+        start_sr_no = default_sr_no
+        if last_sr_no != -1:
+            start_sr_no = default_sr_no + 1
+        subjects, students = _get_semester_data(semester, branch, batch, start_sr_no)
 
         title = f'DMC Semester {semester} Branch {branch} Batch {batch}.pdf'
         full_branch = Branch.objects.get(code=branch).branch
@@ -300,7 +308,6 @@ class StudentDMCDownloadView(GenericAPIView):
             'branch': full_branch,
             'semester': get_roman(semester),
             'session': f'Nov./Dec., {year}' if semester % 2 else f'May./June., {year}',
-            'serialno': serial_no,
         }
         template = get_template(template_path)
 

@@ -1,5 +1,6 @@
 from django.contrib import admin
 from django.urls import path
+from django.utils.translation import gettext_lazy as _
 
 from import_export import resources, fields
 from import_export.admin import ImportExportModelAdmin
@@ -9,7 +10,7 @@ from examination_management.batch.models import Batch
 from examination_management.branch.models import Branch
 from examination_management.student.api.v1.views import StudentTemplateDownloadView, StudentResultTemplateDownloadView, \
     StudentDMCDownloadView
-from examination_management.student.models import Student, SerialNo
+from examination_management.student.models import Student
 
 
 class StudentResource(resources.ModelResource):
@@ -21,13 +22,12 @@ class StudentResource(resources.ModelResource):
         exclude = ('id',)
         import_id_fields = ('roll_no',)
 
-admin.site.register(SerialNo)
 
 @admin.register(Student)
 class StudentAdmin(ImportExportModelAdmin):
     resource_class = StudentResource
 
-    list_display = ('name', 'roll_no', 'fathers_name')
+    list_display = ('name', 'roll_no', 'fathers_name', 'backlogs')
     list_filter = ('branch__code', 'batch__start',
                    'student_semester_instance__semester__semester',)
 

@@ -1,0 +1,14 @@
+<!-- templates/admin/input_filter.html -->
+
+{% load i18n %}
+
+<ul>
+  <li>
+    <form method="GET" action="">
+        <input
+           type="number"
+           value="{{ spec.value|default_if_none:'' }}"
+           name="{{ spec.parameter_name }}"/>
+    </form>
+  </li>
+</ul>
