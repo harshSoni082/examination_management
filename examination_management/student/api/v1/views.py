@@ -79,12 +79,13 @@ def _get_semester_data(semester, branch, batch, start_sr_no):
             'cg_sum': semester_instance.cg_sum,
             'sgpa': sgpa,
             'reappear': reappear,
-            'sr_no': start_sr_no
+            'sr_no': start_sr_no if not semester_instance.sr_no else semester_instance.sr_no
         }
 
-        semester_instance.sr_no = start_sr_no
-        start_sr_no += 1
-        semester_instance.save()
+        if not semester_instance.sr_no:
+            semester_instance.sr_no = start_sr_no
+            start_sr_no += 1
+            semester_instance.save()
 
         if semester > 4:
             # For previous semesters
@@ -283,14 +284,13 @@ class StudentDMCDownloadView(GenericAPIView):
         batch = int(request.GET.get('batch__start', 0))
         default_sr_no = int(request.GET.get('default_sr_no', -1))
 
-        last_sr_no = SemesterInstance.objects.aggregate(Max('sr_no'))
-        print(last_sr_no)
-        if (not (semester and branch and batch)) or (default_sr_no == -1 and last_sr_no == -1):
+        last_sr_no = SemesterInstance.objects.aggregate(Max('sr_no')).get('sr_no__max', None)
+        if (not (semester and branch and batch)) or not (default_sr_no and last_sr_no):
             return HttpResponseRedirect('../')
 
         start_sr_no = default_sr_no
-        if last_sr_no != -1:
-            start_sr_no = default_sr_no + 1
+        if last_sr_no:
+            start_sr_no = last_sr_no + 1
         subjects, students = _get_semester_data(semester, branch, batch, start_sr_no)
 
         title = f'DMC Semester {semester} Branch {branch} Batch {batch}.pdf'
