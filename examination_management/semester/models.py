@@ -28,10 +28,11 @@ class SemesterInstance(StatusMixin, TimeStampedModel):
                                 null=True, related_name='student_semester_instance')
     elective = models.ManyToManyField('subject.Subject',blank=True,
                                 null=True, related_name='elective_semester_instance')
-    
+
     STATUS_CHOICES = (('A', 'Appearing'), ('P', 'Passed'), ('R', 'Reappear'))
     status = models.CharField(choices=STATUS_CHOICES, max_length=1, default='A')
     cg_sum = models.IntegerField(_('CG Sum'), default=0)
+    sr_no = models.IntegerField(_('Sr. No.'), blank=True, null=True, unique=True, db_index=True)
 
     def save(self, *args, **kwargs):
         semester = self.semester.semester
@@ -80,7 +81,15 @@ class SemesterInstance(StatusMixin, TimeStampedModel):
                     safe_status = 'P'
             except SemesterInstance.DoesNotExist:
                 pass
-        self.status = 'R' if has_reappear else safe_status
+        if has_reappear:
+            if self.status != 'R':
+                self.student.backlogs += 1
+            self.status = 'R'
+        else:
+            if self.status == 'R':
+                self.student.backlogs -= 1
+            self.status = safe_status
+        self.student.save()
         self.save()
 
     def __str__(self):

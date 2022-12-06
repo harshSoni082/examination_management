@@ -12,9 +12,7 @@ class Student(StatusMixin, TimeStampedModel):
     batch = models.ForeignKey('batch.Batch', on_delete=models.CASCADE, blank=True, null=True)
     branch = models.ForeignKey('branch.Branch', on_delete=models.SET_NULL, blank=True, null=True)
     fathers_name = models.CharField(_('Fathers Name'), max_length=100, null=True, blank=True)
+    backlogs = models.IntegerField(_('Backlogs'), default=0)
 
     def __str__(self):
         return str(self.roll_no)
-
-class SerialNo(StatusMixin, TimeStampedModel):
-    serial_no = models.IntegerField(_("Serial No"), default = 2022)
