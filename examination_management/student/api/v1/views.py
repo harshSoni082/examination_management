@@ -37,8 +37,6 @@ def _get_semester_data(semester, branch, batch, start_sr_no):
                                                 branch__code=branch, batch__start=batch)
     for student in students_instances.all():
         # For current semester
-        if student.backlogs > 0:
-            continue
 
         semester_instance = SemesterInstance.objects.get(student__roll_no=student.roll_no,
                                                          semester__semester=semester)
@@ -79,6 +77,7 @@ def _get_semester_data(semester, branch, batch, start_sr_no):
             'cg_sum': semester_instance.cg_sum,
             'sgpa': sgpa,
             'reappear': reappear,
+            'backlogs': student.backlogs,
             'sr_no': start_sr_no if not semester_instance.sr_no else semester_instance.sr_no
         }
 
@@ -264,7 +263,7 @@ class StudentResultTemplateDownloadView(GenericAPIView):
         branch_name = Branch.objects.get(code=branch)
         batch_instance = Batch.objects.get(start=batch)
 
-        subjects, students = _get_semester_data(semester, branch, batch)
+        subjects, students = _get_semester_data(semester, branch, batch, 0)
 
         xlsx_name = f'Result Sheet {semester} Semester Batch {batch_instance.start}-{batch_instance.end}'
         with tempfile.NamedTemporaryFile(prefix=xlsx_name, suffix='.xlsx') as fp:
@@ -279,13 +278,14 @@ class StudentResultTemplateDownloadView(GenericAPIView):
 
 class StudentDMCDownloadView(GenericAPIView):
     def get(self, request):
-        semester = int(request.GET.get('student_semester_instance__semester__semester', 0))
+        semester = int(request.GET.get('student_semester_instance__semester__semester', 0)) if int(request.GET.get('student_semester_instance__semester__semester', None)) else None
         branch = request.GET.get('branch__code', None)
-        batch = int(request.GET.get('batch__start', 0))
-        default_sr_no = int(request.GET.get('default_sr_no', -1))
+        batch = int(request.GET.get('batch__start', 0)) if request.GET.get('batch__start', None) else None
+        default_sr_no = int(request.GET.get('default_sr_no', None)) if request.GET.get('default_sr_no', None) else None
 
         last_sr_no = SemesterInstance.objects.aggregate(Max('sr_no')).get('sr_no__max', None)
-        if (not (semester and branch and batch)) or not (default_sr_no and last_sr_no):
+        print(last_sr_no)
+        if (not (semester and branch and batch)) or not (default_sr_no or last_sr_no):
             return HttpResponseRedirect('../')
 
         start_sr_no = default_sr_no

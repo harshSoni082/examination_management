@@ -64,7 +64,9 @@ class SemesterInstance(StatusMixin, TimeStampedModel):
         self.cg_sum -= old_subject_score
         self.cg_sum += new_subject_score
 
-        has_reappear = False
+        print(old_subject_score, new_subject_score)
+
+        has_reappear = False if new_subject_score > 0 else True
         try:
             grades = Grade.objects.filter(semester_instance=self.id)
             for grade in grades.all():

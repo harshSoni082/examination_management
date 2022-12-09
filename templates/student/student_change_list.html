@@ -32,18 +32,4 @@
            name="default_sr_no"
            placeholder="Default Sr No"
         />
-
-    <script>
-
-
-        function addDefaultValueBeforeRedirect(e) {
-            let url = e.target.getAttr('href');
-            url += '&default_sr_no=' + document.getElementsByName('default_sr_no').val
-            alert(url)
-            const link = document.createElement('a');
-            link.href = url;
-            document.body.appendChild(link);
-            link.click();
-        }
-    </script>
 {% endblock %}
