@@ -245,9 +245,9 @@ class StudentTemplateDownloadView(GenericAPIView):
     def get(self, request):
         with tempfile.NamedTemporaryFile(prefix=f'Student Admission', suffix='.xlsx') as fp:
             create_empty_excel(path=fp.name,
-                               columns=['application_no', 'roll_no', 'name', 'fathers_name', 'mothers_name', 'category',
-                                        'pwd', 'gender', 'dob', 'soe', 'address', 'is_prep', 'nationality', 'branch',
-                                        'allocated', 'mobile', 'email', 'batch', 'backlogs', ])
+                               columns=['jee_application_no', 'roll_no', 'name', 'fathers_name', 'mothers_name', 'category',
+                                        'pwd', 'gender', 'dob', 'state_of_eligibility', 'address', 'is_prep', 'nationality', 'branch',
+                                        'allocated', 'mobile', 'email', 'batch'])
             fp.seek(0)
             response = HttpResponse(fp,
                                     content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
