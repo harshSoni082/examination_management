@@ -21,7 +21,7 @@ class Student(StatusMixin, TimeStampedModel):
 
     dob = models.DateField(_('DOB'), blank=True, null=True)
     state_of_eligibility = models.CharField(_('State of Eligibility'), max_length=100, blank=True, null=True)
-    address = models.CharField(_('Address'), max_length=500, blank=True, null=True)
+    address = models.TextField(_('Address'), max_length=500, blank=True, null=True)
 
     is_prep = models.CharField(_('Is Prep'), max_length=3, choices=yes_no_choices, null=True, blank=True)
 
