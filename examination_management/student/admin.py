@@ -27,9 +27,9 @@ class StudentResource(resources.ModelResource):
 class StudentAdmin(ImportExportModelAdmin):
     resource_class = StudentResource
 
-    list_display = ('name', 'roll_no', 'fathers_name', 'backlogs')
+    list_display = ('name', 'roll_no', 'fathers_name', 'gender', 'backlogs',)
     list_filter = ('branch__code', 'batch__start',
-                   'student_semester_instance__semester__semester',)
+                   'student_semester_instance__semester__semester', 'gender',)
 
     change_list_template = 'student/student_change_list.html'
 
