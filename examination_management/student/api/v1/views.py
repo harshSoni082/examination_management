@@ -27,7 +27,11 @@ def _get_semester_data(semester, branch, batch, start_sr_no):
         subjects[subject.code] = {
             'name': subject.name,
             'code': subject.code,
+<<<<<<< HEAD
             'credit': subject.credit/1
+=======
+            'credit': subject.credit / 1
+>>>>>>> 3f64555f459da4bb687da851ad6fb5a2c10f7a1b
         }
         if not subject.is_elective:
             core_credit += subject.credit
@@ -55,7 +59,11 @@ def _get_semester_data(semester, branch, batch, start_sr_no):
         for grade in grade_instances.all():
             grades[grade.subject.code] = {
                 'grade': grade.grade,
+<<<<<<< HEAD
                 'score': grade.score/1
+=======
+                'score': grade.score / 1
+>>>>>>> 3f64555f459da4bb687da851ad6fb5a2c10f7a1b
             }
 
             if grade.grade and grade.grade >= 'F':
@@ -75,14 +83,23 @@ def _get_semester_data(semester, branch, batch, start_sr_no):
             'fathers_name': student.fathers_name,
             'roll_no': student.roll_no,
             'grades': grades,
+<<<<<<< HEAD
             'total_credit': credit/1,
             'cg_sum': semester_instance.cg_sum/1,
+=======
+            'total_credit': credit / 1,
+            'cg_sum': semester_instance.cg_sum / 1,
+>>>>>>> 3f64555f459da4bb687da851ad6fb5a2c10f7a1b
             'sgpa': sgpa,
             'reappear': reappear,
             'backlogs': student.backlogs,
             'sr_no': start_sr_no if not semester_instance.sr_no and student.backlogs == 0 else semester_instance.sr_no
         }
+<<<<<<< HEAD
  
+=======
+
+>>>>>>> 3f64555f459da4bb687da851ad6fb5a2c10f7a1b
         if not semester_instance.sr_no and student.backlogs == 0:
             semester_instance.sr_no = start_sr_no
             start_sr_no += 1
@@ -112,12 +129,20 @@ def _get_semester_data(semester, branch, batch, start_sr_no):
                 prev_semesters[sem_no] = {
                     'session': f'Nov./Dec., {year}' if sem_no % 2 else f'May./June., {year}',
                     'roman_sem': get_roman(sem_no),
+<<<<<<< HEAD
                     'credit': curr_credit/1,
+=======
+                    'credit': curr_credit / 1,
+>>>>>>> 3f64555f459da4bb687da851ad6fb5a2c10f7a1b
                     'sgpa': sgpa,
                 }
 
             students[student.roll_no]['prev_semesters'] = sorted(prev_semesters.items())
+<<<<<<< HEAD
             students[student.roll_no]['total_credits'] = total_credits/1
+=======
+            students[student.roll_no]['total_credits'] = total_credits / 1
+>>>>>>> 3f64555f459da4bb687da851ad6fb5a2c10f7a1b
             students[student.roll_no]['cgpa'] = round(cgpa / total_credits, 4)
     students = OrderedDict(sorted(students.items()))
     return subjects, students
@@ -244,7 +269,10 @@ class StudentTemplateDownloadView(GenericAPIView):
 
     def get(self, request):
         with tempfile.NamedTemporaryFile(prefix=f'Student Admission', suffix='.xlsx') as fp:
-            create_empty_excel(path=fp.name, columns=['roll_no', 'name', 'fathers_name', 'email', 'batch', 'branch'])
+            create_empty_excel(path=fp.name,
+                               columns=['jee_application_no', 'roll_no', 'name', 'fathers_name', 'mothers_name', 'category',
+                                        'pwd', 'gender', 'dob', 'state_of_eligibility', 'address', 'is_prep', 'nationality', 'branch',
+                                        'allocated', 'mobile', 'email', 'batch'])
             fp.seek(0)
             response = HttpResponse(fp,
                                     content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
@@ -278,9 +306,36 @@ class StudentResultTemplateDownloadView(GenericAPIView):
             return response
 
 
+class StudentSemesterResultDownloadView(GenericAPIView):
+
+    def get(self, request):
+        semester = int(request.GET.get('student_semester_instance__semester__semester', None))
+        branch = request.GET.get('branch__code', None)
+        batch = int(request.GET.get('batch__start', None))
+
+        if not (semester and branch and batch):
+            return HttpResponseRedirect('../')
+
+        branch_name = Branch.objects.get(code=branch)
+        batch_instance = Batch.objects.get(start=batch)
+
+        subjects, students = _get_semester_data(semester, branch, batch, 0)
+
+        xlsx_name = f'Result Sheet {semester} Semester Batch {batch_instance.start}-{batch_instance.end}'
+        with tempfile.NamedTemporaryFile(prefix=xlsx_name, suffix='.xlsx') as fp:
+            create_result_excel(fp.name, subjects, students, semester, branch_name, batch_instance.start,
+                                batch_instance.end)
+            fp.seek(0)
+            response = HttpResponse(fp,
+                                    content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+            response['Content-Disposition'] = f'attachment; filename={xlsx_name}.xlsx'
+            return response
+
+
 class StudentDMCDownloadView(GenericAPIView):
     def get(self, request):
-        semester = int(request.GET.get('student_semester_instance__semester__semester', 0)) if int(request.GET.get('student_semester_instance__semester__semester', None)) else None
+        semester = int(request.GET.get('student_semester_instance__semester__semester', 0)) if int(
+            request.GET.get('student_semester_instance__semester__semester', None)) else None
         branch = request.GET.get('branch__code', None)
         batch = int(request.GET.get('batch__start', 0)) if request.GET.get('batch__start', None) else None
         default_sr_no = int(request.GET.get('default_sr_no', None)) if request.GET.get('default_sr_no', None) else None
