@@ -9,7 +9,7 @@ from import_export.widgets import ForeignKeyWidget
 from examination_management.batch.models import Batch
 from examination_management.branch.models import Branch
 from examination_management.student.api.v1.views import StudentTemplateDownloadView, StudentResultTemplateDownloadView, \
-    StudentDMCDownloadView
+    StudentDMCDownloadView, SemesterResultTemplateDownloadView
 from examination_management.student.models import Student
 
 
@@ -29,7 +29,7 @@ class StudentAdmin(ImportExportModelAdmin):
 
     list_display = ('name', 'roll_no', 'fathers_name', 'gender', 'backlogs',)
     list_filter = ('branch__code', 'batch__start',
-                   'student_semester_instance__semester__semester', 'gender',)
+                   'student_semester_instance__semester__code', 'gender',)
 
     change_list_template = 'student/student_change_list.html'
 
@@ -39,8 +39,8 @@ class StudentAdmin(ImportExportModelAdmin):
     def batch__start(self, obj):
         return obj.batch.start
 
-    def student_semester_instance__semester__semester(self, obj):
-        return obj.student_semester_instance.semester.semester
+    def student_semester_instance__semester__code(self, obj):
+        return obj.student_semester_instance.semester.code
 
     def get_urls(self):
         urls = super().get_urls()
@@ -48,5 +48,6 @@ class StudentAdmin(ImportExportModelAdmin):
             path('download/', StudentTemplateDownloadView.as_view(), name='student_template_download'),
             path('dmc/download/', StudentDMCDownloadView.as_view(), name='student_dmc_download'),
             path('result/download/', StudentResultTemplateDownloadView.as_view(), name='student_result_download'),
+            path('final/resultsheet/download/', SemesterResultTemplateDownloadView.as_view(), name='semester_result_download'),
         ]
         return admin_urls + urls

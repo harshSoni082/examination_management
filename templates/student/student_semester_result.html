@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+     <meta http-equiv=Content-Type content="text/html; charset=utf-8">
+ <meta name=Generator content="Microsoft Word 15 (filtered)">
+ <style>
+  <!--
+  /* Font Definitions */
+  @font-face
+  {font-family:Mangal;
+   panose-1:2 4 5 3 5 2 3 3 2 2;}
+  @font-face
+  {font-family:"Cambria Math";
+   panose-1:2 4 5 3 5 4 6 3 2 4;}
+  @font-face
+  {font-family:Calibri;
+   panose-1:2 15 5 2 2 2 4 3 2 4;}
+  @font-face
+  {font-family:SansSerif;
+   panose-1:2 11 6 4 2 2 2 2 2 4;}
+  /* Style Definitions */
+  p.MsoNormal, li.MsoNormal, div.MsoNormal
+  {margin:0cm;
+   margin-bottom:.0001pt;
+   font-size:10.0pt;
+   font-family:"Times New Roman",serif;}
+  a:link, span.MsoHyperlink
+  {color:blue;
+   text-decoration:underline;}
+  a:visited, span.MsoHyperlinkFollowed
+  {color:purple;
+   text-decoration:underline;}
+  p.MsoListParagraph, li.MsoListParagraph, div.MsoListParagraph
+  {margin-top:0cm;
+   margin-right:0cm;
+   margin-bottom:0cm;
+   margin-left:36.0pt;
+   margin-bottom:.0001pt;
+   font-size:10.0pt;
+   font-family:"Times New Roman",serif;}
+  p.MsoListParagraphCxSpFirst, li.MsoListParagraphCxSpFirst, div.MsoListParagraphCxSpFirst
+  {margin-top:0cm;
+   margin-right:0cm;
+   margin-bottom:0cm;
+   margin-left:36.0pt;
+   margin-bottom:.0001pt;
+   font-size:10.0pt;
+   font-family:"Times New Roman",serif;}
+  p.MsoListParagraphCxSpMiddle, li.MsoListParagraphCxSpMiddle, div.MsoListParagraphCxSpMiddle
+  {margin-top:0cm;
+   margin-right:0cm;
+   margin-bottom:0cm;
+   margin-left:36.0pt;
+   margin-bottom:.0001pt;
+   font-size:10.0pt;
+   font-family:"Times New Roman",serif;}
+  p.MsoListParagraphCxSpLast, li.MsoListParagraphCxSpLast, div.MsoListParagraphCxSpLast
+  {margin-top:0cm;
+   margin-right:0cm;
+   margin-bottom:0cm;
+   margin-left:36.0pt;
+   margin-bottom:.0001pt;
+   font-size:10.0pt;
+   font-family:"Times New Roman",serif;}
+  p.EMPTYCELLSTYLE, li.EMPTYCELLSTYLE, div.EMPTYCELLSTYLE
+  {mso-style-name:EMPTY_CELL_STYLE;
+   margin:0cm;
+   margin-bottom:.0001pt;
+   font-size:.5pt;
+   font-family:"SansSerif",serif;
+   color:black;}
+  p.xl65, li.xl65, div.xl65
+  {mso-style-name:xl65;
+   margin-right:0cm;
+   margin-left:0cm;
+   text-align:center;
+   border:none;
+   padding:0cm;
+   font-size:12.0pt;
+   font-family:"Times New Roman",serif;}
+  p.xl66, li.xl66, div.xl66
+  {mso-style-name:xl66;
+   margin-right:0cm;
+   margin-left:0cm;
+   border:none;
+   padding:0cm;
+   font-size:12.0pt;
+   font-family:"Times New Roman",serif;}
+  p.xl67, li.xl67, div.xl67
+  {mso-style-name:xl67;
+   margin-right:0cm;
+   margin-left:0cm;
+   border:none;
+   padding:0cm;
+   font-size:12.0pt;
+   font-family:"Times New Roman",serif;}
+  .MsoChpDefault
+  {font-size:11.0pt;
+   font-family:"Calibri",sans-serif;}
+  .MsoPapDefault
+  {margin-bottom:10.0pt;
+   line-height:115%;}
+  @page WordSection1
+  {size:612.0pt 792.0pt;
+   margin:42.55pt 42.55pt 42.55pt 42.55pt;}
+  div.WordSection1
+  {page:WordSection1;}
+  /* List Definitions */
+  ol
+  {margin-bottom:0cm;}
+  ul
+  {margin-bottom:0cm;}
+  -->
+ </style>
+    <title>Semester {{ semester }} Result Sheet for {{ branch }} {{ batch }}</title>
+</head>
+
+<body lang=EN-IN link=blue vlink=purple>
+
+<center>
+ <div class=WordSection1>
+
+  <p class=MsoNormal align=center style='text-align:center;line-height:150%'><b><span
+          style='font-size:14.0pt;line-height:150%'>INDIAN INSTITUTE OF INFORMATION TECHNOLOGY SONEPAT</span></b></p>
+
+  <p class=MsoNormal align=center style='text-align:center;line-height:150%'><b><span
+          style='font-size:14.0pt;line-height:150%'>&nbsp;</span></b></p>
+
+  <p class=MsoNormal align=center style='text-align:center;line-height:150%'><span
+          style='font-size:11.0pt;line-height:150%;color:black'>Notification for Result
+of BACHELOR OF TECHNOLOGY Semester-{{ semester }},</span> <span style='font-size:11.0pt;
+line-height:150%;color:black'>{{ branch }}</span></p>
+
+  <p class=MsoNormal align=center style='text-align:center;line-height:150%'><span
+          style='font-size:11.0pt;line-height:150%;color:black'>Examinations. (Batch - {{ batch_start }} - {{ batch_end }})<br> {{ session }}</span></p>
+
+  <p class=MsoNormal align=center style='text-align:center;line-height:150%'><span
+          style='font-size:11.0pt;line-height:150%;color:black'>&nbsp;</span></p>
+
+  <p class=MsoNormal style='text-align:justify;line-height:150%'><span
+          style='font-size:11.0pt;line-height:150%;color:black'>The Result of the following candidates who appeared in BACHELOR OF TECHNOLOGY Semester-{{ semester }},</span>
+   <span style='font-size:11.0pt;line-height:150%;color:black'>{{ branch }} in {{ session }}, is declared as under: -</span></p>
+
+  <p class=MsoNormal style='text-align:justify;line-height:150%'><span style='font-size:11.0pt;line-height:150%;color:black'>&nbsp;</span></p>
+
+  <p class=MsoNormal style='text-align:justify;line-height:150%'><span style='font-size:11.0pt;line-height:150%;color:black'>&nbsp;</span></p>
+
+  <table class=MsoTableGrid border=1 cellspacing=0 cellpadding=0 style='border-collapse:collapse;border:none'>
+   <tr>
+    <td width=702 colspan=3 style='width:526.4pt;border:solid windowtext 1.0pt;
+  padding:0cm 5.4pt 0cm 5.4pt'>
+     <p class=MsoNormal style='line-height:150%'><b><span style='font-size:11.0pt;
+  line-height:150%;font-family:"Calibri",sans-serif;color:black'>Note: SGPA shown means Pass</span></b></p>
+    </td>
+   </tr>
+   <tr>
+    <td width=702 colspan=3 style='width:526.4pt;border:solid windowtext 1.0pt;
+  border-top:none;padding:0cm 5.4pt 0cm 5.4pt'>
+     <p class=MsoNormal style='line-height:150%'><b><span style='font-size:11.0pt;
+  line-height:150%;font-family:"Calibri",sans-serif;color:black'>RL- Result Late, Int- Internal re-appear, End- End semester re-appear</span></b></p>
+    </td>
+   </tr>
+   <tr>
+    <td width=52 valign=top style='width:39.35pt;border:solid windowtext 1.0pt;
+  border-top:none;padding:0cm 5.4pt 0cm 5.4pt'>
+     <p class=MsoNormal style='line-height:150%'><b><span style='font-size:11.0pt;
+  line-height:150%;font-family:"Calibri",sans-serif'>Sr. no</span></b></p>
+    </td>
+    <td width=558 valign=top style='width:418.3pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+  padding:0cm 5.4pt 0cm 5.4pt'>
+     <p class=MsoNormal style='line-height:150%'><b><span style='font-size:11.0pt;
+  line-height:150%;font-family:"Calibri",sans-serif'>Subjects</span></b></p>
+    </td>
+    <td width=92 style='width:68.75pt;border-top:none;border-left:none;
+  border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+  padding:0cm 5.4pt 0cm 5.4pt'>
+     <p class=MsoNormal align=right style='text-align:right;line-height:150%'><b><span style='font-size:11.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+  color:black'>Code No.</span></b></p>
+    </td>
+   </tr>
+
+   {% for subject_code, subject in subjects %}
+      <tr>
+          <td width=52 style='width:39.35pt;border:solid windowtext 1.0pt;border-top:
+  none;padding:0cm 5.4pt 0cm 5.4pt'>
+              <p class=MsoNormal align=center style='text-align:center;line-height:150%'><span style='font-size:11.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+  color:black'>{{ forloop.counter }}</span></p>
+          </td>
+          <td width=558 style='width:418.3pt;border-top:none;border-left:none;
+  border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+  padding:0cm 5.4pt 0cm 5.4pt'>
+              <p class=MsoNormal style='line-height:150%'><span style='font-size:11.0pt;
+  line-height:150%;font-family:"Calibri",sans-serif;color:black'>{{ subject.name }}</span></p>
+          </td>
+          <td width=92 style='width:68.75pt;border-top:none;border-left:none;
+  border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+  padding:0cm 5.4pt 0cm 5.4pt'>
+              <p class=MsoNormal align=center style='text-align:center;line-height:150%'><span style='font-size:11.0pt;line-height:150%;font-family:"Calibri",sans-serif;
+  color:black'>{{ subject_code }}</span></p>
+          </td>
+      </tr>
+   {% endfor %}
+
+  </table>
+
+  <p class=MsoNormal align=center style='text-align:center'>&nbsp;</p>
+
+  <p class=MsoNormal align=center style='text-align:center'>&nbsp;</p>
+
+  <p class=MsoNormal align=center style='text-align:center'>&nbsp;</p>
+
+  <p class=MsoNormal align=center style='text-align:center'>&nbsp;</p>
+
+  <p class=MsoNormal align=center style='text-align:center'>&nbsp;</p>
+
+  <p class=MsoNormal>&nbsp;</p>
+
+  <div align=center>
+
+   <table class=MsoNormalTable border=0 cellspacing=0 cellpadding=0 width=747
+          style='width:560.5pt;border-collapse:collapse'>
+    <tr style='height:14.4pt'>
+     <td width=41 nowrap valign=bottom style='width:30.8pt;border:solid windowtext 1.0pt;
+  padding:0cm 5.4pt 0cm 5.4pt;height:14.4pt'>
+      <p class=MsoNormal align=center style='text-align:center;line-height:200%'><b><span lang=EN-US style='font-size:11.0pt;line-height:200%;font-family:"Calibri",sans-serif;
+  color:black'>S.no</span></b></p>
+     </td>
+     <td width=75 nowrap valign=bottom style='width:56.0pt;border:solid windowtext 1.0pt;
+  border-left:none;padding:0cm 5.4pt 0cm 5.4pt;height:14.4pt'>
+      <p class=MsoNormal align=center style='text-align:center;line-height:200%'><b><span lang=EN-US style='font-size:11.0pt;line-height:200%;font-family:"Calibri",sans-serif;
+  color:black'>Roll No</span></b></p>
+     </td>
+     <td width=216 nowrap valign=bottom style='width:161.9pt;border:solid windowtext 1.0pt;
+  border-left:none;padding:0cm 5.4pt 0cm 5.4pt;height:14.4pt'>
+      <p class=MsoNormal style='line-height:200%'><b><span lang=EN-US style='font-size:11.0pt;line-height:200%;font-family:"Calibri",sans-serif;
+  color:black'>Name</span></b></p>
+     </td>
+     <td width=277 nowrap valign=bottom style='width:207.55pt;border:solid windowtext 1.0pt;
+  border-left:none;padding:0cm 5.4pt 0cm 5.4pt;height:14.4pt'>
+      <p class=MsoNormal style='line-height:200%'><b><span lang=EN-US style='font-size:11.0pt;line-height:200%;font-family:"Calibri",sans-serif;
+  color:black'>Father’s Name</span></b></p>
+     </td>
+     <td width=139 nowrap valign=bottom style='width:104.25pt;border:solid windowtext 1.0pt;
+  border-left:none;padding:0cm 5.4pt 0cm 5.4pt;height:14.4pt'>
+      <p class=MsoNormal align=center style='text-align:center;line-height:200%'><b><span lang=EN-US style='font-size:11.0pt;line-height:200%;font-family:"Calibri",sans-serif;
+  color:black'>SGPA</span></b></p>
+     </td>
+    </tr>
+
+    <tr style='height:14.4pt'>
+     <td width=41 nowrap valign=bottom style='width:30.8pt;border:solid windowtext 1.0pt;
+  border-top:none;padding:0cm 5.4pt 0cm 5.4pt;height:14.4pt'>
+      <p class=MsoNormal align=center style='text-align:center'><span style='font-size:11.0pt;font-family:"Calibri",sans-serif;color:black'>{{ forloop.counter }}</span></p>
+     </td>
+     <td width=75 nowrap style='width:56.0pt;border-top:none;border-left:none;
+  border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+  padding:0cm 5.4pt 0cm 5.4pt;height:14.4pt'>
+      <p class=MsoNormal align=center style='text-align:center'><span style='font-size:11.0pt;font-family:"Calibri",sans-serif;color:black'>{{ student.roll_no }}</span></p>
+     </td>
+     <td width=216 nowrap style='width:161.9pt;border-top:none;border-left:none;
+  border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+  padding:0cm 5.4pt 0cm 5.4pt;height:14.4pt'>
+      <p class=MsoNormal><span style='font-size:11.0pt;font-family:"Calibri",sans-serif;
+  color:black'>{{ student.name }}</span></p>
+     </td>
+     <td width=277 nowrap style='width:207.55pt;border-top:none;border-left:none;
+  border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+  padding:0cm 5.4pt 0cm 5.4pt;height:14.4pt'>
+      <p class=MsoNormal><span style='font-size:11.0pt;font-family:"Calibri",sans-serif;
+  color:black'>{{ student.fathers_name }}</span></p>
+     </td>
+     <td width=139 nowrap valign=bottom style='width:104.25pt;border-top:none;
+  border-left:none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+  padding:0cm 5.4pt 0cm 5.4pt;height:14.4pt'>
+      <p class=MsoNormal align=center style='text-align:center'><span style='font-size:11.0pt;color:black'>{{ student.sgpa }}</span></p>
+     </td>
+    </tr>
+
+   </table>
+
+  </div>
+
+  <p class=MsoNormal><b><span style='font-size:12.0pt;color:black'>&nbsp;</span></b></p>
+
+  <p class=MsoNormal><b><span style='font-size:12.0pt;color:black'>&nbsp;</span></b></p>
+
+  <p class=MsoNormal><b><span style='font-size:12.0pt;color:black'>&nbsp;</span></b></p>
+
+  <p class=MsoNormal><b><span style='font-size:12.0pt;color:black'>&nbsp;</span></b></p>
+
+  <p class=MsoNormal><b><span style='font-size:12.0pt;color:black'>&nbsp;</span></b></p>
+
+  <p class=MsoNormal><b><span style='font-size:12.0pt;color:black'>All efforts
+      have been made to publish this result after checking the entries properly.
+      However, the result can stand revised in case some discrepancy is observed.</span></b></p>
+
+  <p class=MsoNormal><b><span style='font-size:12.0pt;color:black'>&nbsp;</span></b></p>
+
+  <p class=MsoNormal><b><span style='font-size:12.0pt;color:black'>&nbsp;</span></b></p>
+
+  <table class=MsoTableGrid border=0 cellspacing=0 cellpadding=0
+         style='border-collapse:collapse;border:none'>
+   <tr>
+    <td width=143 valign=top style='width:107.5pt;padding:0cm 5.4pt 0cm 5.4pt'>
+     <p class=MsoNormal align=center style='text-align:center'><b><span
+             style='font-size:12.0pt;color:black'>Compiled By</span></b></p>
+    </td>
+    <td width=223 valign=top style='width:167.25pt;padding:0cm 5.4pt 0cm 5.4pt'>
+     <p class=MsoNormal align=center style='text-align:center'><b><span
+             style='font-size:12.0pt;color:black'>Checked By</span></b></p>
+    </td>
+    <td width=321 colspan=2 valign=top style='width:240.95pt;padding:0cm 5.4pt 0cm 5.4pt'>
+     <p class=MsoNormal align=center style='text-align:center'><b><span
+             style='font-size:12.0pt;color:black'>Verified By</span></b></p>
+    </td>
+   </tr>
+   <tr style='height:33.95pt'>
+    <td width=143 valign=top style='width:107.5pt;padding:0cm 5.4pt 0cm 5.4pt;
+  height:33.95pt'>
+     <p class=MsoNormal><b><span style='font-size:12.0pt;color:black'>&nbsp;</span></b></p>
+    </td>
+    <td width=223 valign=top style='width:167.25pt;padding:0cm 5.4pt 0cm 5.4pt;
+  height:33.95pt'>
+     <p class=MsoNormal><b><span style='font-size:12.0pt;color:black'>&nbsp;</span></b></p>
+    </td>
+    <td width=161 valign=top style='width:120.5pt;padding:0cm 5.4pt 0cm 5.4pt;
+  height:33.95pt'>
+     <p class=MsoNormal><b><span style='font-size:12.0pt;color:black'>&nbsp;</span></b></p>
+    </td>
+    <td width=161 valign=top style='width:120.45pt;padding:0cm 5.4pt 0cm 5.4pt;
+  height:33.95pt'>
+     <p class=MsoNormal><b><span style='font-size:12.0pt;color:black'>&nbsp;</span></b></p>
+    </td>
+   </tr>
+   <tr>
+    <td width=143 valign=top style='width:107.5pt;padding:0cm 5.4pt 0cm 5.4pt'>
+     <p class=MsoNormal><b><span style='font-size:12.0pt;color:black'>Dr. Mukesh Mann</span></b></p>
+    </td>
+    <td width=223 valign=top style='width:167.25pt;padding:0cm 5.4pt 0cm 5.4pt'>
+     <p class=MsoNormal><b><span style='font-size:12.0pt;color:black'>Dr. Diddi Kumara Swamy</span></b></p>
+    </td>
+    <td width=161 valign=top style='width:120.5pt;padding:0cm 5.4pt 0cm 5.4pt'>
+     <p class=MsoNormal><b><span style='font-size:12.0pt;color:black'>Dr. Sourabh Jain</span></b></p>
+    </td>
+    <td width=161 valign=top style='width:120.45pt;padding:0cm 5.4pt 0cm 5.4pt'>
+     <p class=MsoNormal><b><span style='font-size:12.0pt;color:black'>Mr. Gaurav Gautam </span></b></p>
+    </td>
+   </tr>
+  </table>
+
+  <p class=MsoNormal><b><span style='font-size:12.0pt;color:black'>&nbsp;</span></b></p>
+
+  <p class=MsoNormal><b><span style='font-size:12.0pt;color:black'>&nbsp;</span></b></p>
+
+  <p class=MsoNormal><b><span style='font-size:12.0pt;color:black'>&nbsp;</span></b></p>
+
+  <p class=MsoNormal><b><span style='font-size:12.0pt;color:black'>&nbsp;</span></b></p>
+
+  <table class=MsoTableGrid border=0 cellspacing=0 cellpadding=0
+         style='border-collapse:collapse;border:none'>
+   <tr>
+    <td width=239 valign=top style='width:179.2pt;padding:0cm 5.4pt 0cm 5.4pt'>
+     <p class=MsoNormal style='line-height:150%'><b><span style='font-size:11.0pt;
+  line-height:150%'>Date:</span></b></p>
+    </td>
+    <td width=239 valign=top style='width:179.25pt;padding:0cm 5.4pt 0cm 5.4pt'>
+     <p class=MsoNormal align=center style='text-align:center;line-height:150%'><b><span
+             style='font-size:11.0pt;line-height:150%'>&nbsp;</span></b></p>
+    </td>
+    <td width=239 valign=top style='width:179.25pt;padding:0cm 5.4pt 0cm 5.4pt'>
+     <p class=MsoNormal align=right style='text-align:right;line-height:150%'><b><span
+             style='font-size:11.0pt;line-height:150%'>&nbsp;</span></b></p>
+    </td>
+   </tr>
+   <tr>
+    <td width=239 valign=top style='width:179.2pt;padding:0cm 5.4pt 0cm 5.4pt'>
+     <p class=MsoNormal style='line-height:150%'><b><span style='font-size:11.0pt;
+  line-height:150%'>&nbsp;</span></b></p>
+    </td>
+    <td width=239 valign=top style='width:179.25pt;padding:0cm 5.4pt 0cm 5.4pt'>
+     <p class=MsoNormal align=center style='text-align:center;line-height:150%'><b><span
+             style='font-size:11.0pt;line-height:150%'>&nbsp;</span></b></p>
+    </td>
+    <td width=239 valign=top style='width:179.25pt;padding:0cm 5.4pt 0cm 5.4pt'>
+     <p class=MsoNormal align=center style='text-align:center;line-height:150%'><b><span
+             style='font-size:11.0pt;line-height:150%'>Dr. Syed Ghufran Hashmi</span></b></p>
+    </td>
+   </tr>
+   <tr>
+    <td width=239 valign=top style='width:179.2pt;padding:0cm 5.4pt 0cm 5.4pt'>
+     <p class=MsoNormal style='line-height:150%'><b><span style='font-size:11.0pt;
+  line-height:150%'>Place: Sonepat</span></b></p>
+    </td>
+    <td width=239 valign=top style='width:179.25pt;padding:0cm 5.4pt 0cm 5.4pt'>
+     <p class=MsoNormal align=center style='text-align:center;line-height:150%'><b><span
+             style='font-size:11.0pt;line-height:150%'>&nbsp;</span></b></p>
+    </td>
+    <td width=239 valign=top style='width:179.25pt;padding:0cm 5.4pt 0cm 5.4pt'>
+     <p class=MsoNormal align=right style='text-align:right;line-height:150%'><b><span
+             style='font-size:11.0pt;line-height:150%'>Officer- In-Charge (Examination)</span></b></p>
+    </td>
+   </tr>
+  </table>
+
+  <p class=MsoNormal>&nbsp;</p>
+
+ </div>
+</center>
+
+</body>
+
+</html>
