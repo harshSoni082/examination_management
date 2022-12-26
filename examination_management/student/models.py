@@ -27,7 +27,7 @@ class Student(StatusMixin, TimeStampedModel):
 
     nationality = models.CharField(_('Nationality'), max_length=100, blank=True, null=True)
     branch = models.ForeignKey('branch.Branch', on_delete=models.SET_NULL, blank=True, null=True)
-    allocated_cat = models.BooleanField(_('Allocated Category'), default=True)
+    allocated_cat = models.CharField(_('Allocated Category'), max_length=100, blank=True, null=True)
     mobile = models.CharField(_('Mobile'), max_length=100, blank=True, null=True)
     email = models.EmailField(_('Email'), null=True, blank=True, unique=True)
     batch = models.ForeignKey('batch.Batch', on_delete=models.CASCADE, blank=True, null=True)

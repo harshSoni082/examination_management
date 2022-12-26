@@ -9,7 +9,7 @@ from rest_framework import permissions, status
 from rest_framework.generics import GenericAPIView
 from rest_framework.response import Response
 
-from examination_management.semester.models import SemesterInstance
+from examination_management.semester.models import SemesterInstance, Semester
 from examination_management.grade.models import Grade
 from examination_management.batch.models import Batch
 from examination_management.branch.models import Branch
@@ -21,7 +21,7 @@ from examination_management.utils.utils import create_empty_excel, create_result
 
 def _get_semester_data(semester, branch, batch, start_sr_no):
     subjects = {}
-    subject_instances = Subject.objects.filter(subject_semester__semester=semester)
+    subject_instances = Subject.objects.filter(subject_semester__code=semester)
     core_credit = 0
     for subject in subject_instances.all():
         subjects[subject.code] = {
@@ -33,13 +33,13 @@ def _get_semester_data(semester, branch, batch, start_sr_no):
             core_credit += subject.credit
 
     students = OrderedDict()
-    students_instances = Student.objects.filter(student_semester_instance__semester__semester=semester,
+    students_instances = Student.objects.filter(student_semester_instance__semester__code=semester,
                                                 branch__code=branch, batch__start=batch).order_by('roll_no')
     for student in students_instances.all():
         # For current semester
 
         semester_instance = SemesterInstance.objects.get(student__roll_no=student.roll_no,
-                                                         semester__semester=semester)
+                                                         semester__code=semester)
 
         credit = 0
         for subject in semester_instance.semester.subject.all():
@@ -247,7 +247,7 @@ class StudentTemplateDownloadView(GenericAPIView):
             create_empty_excel(path=fp.name,
                                columns=['jee_application_no', 'roll_no', 'name', 'fathers_name', 'mothers_name', 'category',
                                         'pwd', 'gender', 'dob', 'state_of_eligibility', 'address', 'is_prep', 'nationality', 'branch',
-                                        'allocated', 'mobile', 'email', 'batch'])
+                                        'allocated', 'mobile', 'email', 'batch', 'remarks'])
             fp.seek(0)
             response = HttpResponse(fp,
                                     content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
@@ -258,7 +258,7 @@ class StudentTemplateDownloadView(GenericAPIView):
 class StudentResultTemplateDownloadView(GenericAPIView):
 
     def get(self, request):
-        semester = int(request.GET.get('student_semester_instance__semester__semester', None))
+        semester = request.GET.get('student_semester_instance__semester__code', None)
         branch = request.GET.get('branch__code', None)
         batch = int(request.GET.get('batch__start', None))
 
@@ -284,7 +284,7 @@ class StudentResultTemplateDownloadView(GenericAPIView):
 class StudentSemesterResultDownloadView(GenericAPIView):
 
     def get(self, request):
-        semester = int(request.GET.get('student_semester_instance__semester__semester', None))
+        semester = request.GET.get('student_semester_instance__semester__code', None)
         branch = request.GET.get('branch__code', None)
         batch = int(request.GET.get('batch__start', None))
 
@@ -295,11 +295,12 @@ class StudentSemesterResultDownloadView(GenericAPIView):
         batch_instance = Batch.objects.get(start=batch)
 
         subjects, students = _get_semester_data(semester, branch, batch, 0)
+        semester_number = Semester.objects.get(code=semester).semester
 
-        xlsx_name = f'Result Sheet {semester} Semester Batch {batch_instance.start}-{batch_instance.end}'
+        xlsx_name = f'Result Sheet {semester_number} Semester Batch {batch_instance.start}-{batch_instance.end}'
         with tempfile.NamedTemporaryFile(prefix=xlsx_name, suffix='.xlsx') as fp:
-            create_result_excel(fp.name, subjects, students, semester, branch_name, batch_instance.start,
-                                batch_instance.end)
+            create_result_excel(fp.name, subjects, students, semester_number, branch_name,
+                                batch_instance.start, batch_instance.end)
             fp.seek(0)
             response = HttpResponse(fp,
                                     content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
@@ -307,10 +308,44 @@ class StudentSemesterResultDownloadView(GenericAPIView):
             return response
 
 
+class SemesterResultTemplateDownloadView(GenericAPIView):
+
+    def get(self, request):
+        semester = request.GET.get('student_semester_instance__semester__code', None)
+        branch = request.GET.get('branch__code', None)
+        batch = int(request.GET.get('batch__start', None))
+
+        if not (semester and branch and batch):
+            return HttpResponseRedirect('../')
+
+        semester_number = Semester.objects.get(code=semester).semester
+        branch_name = Branch.objects.get(code=branch).branch
+        batch_instance = Batch.objects.get(start=batch)
+        year = batch + semester_number // 2
+
+        subjects, students = _get_semester_data(semester, branch, batch, 0)
+        semester_number = Semester.objects.get(code=semester).semester
+
+        title = f'Final Result Sheet {semester_number} Semester Batch {batch_instance.start}-{batch_instance.end}'
+        template_path = 'student/student_semester_result.html'
+        context = {
+            'subjects': sorted(subjects.items()),
+            'students': students,
+            'title': title,
+            'branch': branch_name,
+            'semester': get_roman(semester_number),
+            'session': f'Nov./Dec., {year}' if semester_number % 2 else f'May./June., {year}',
+            'batch_start': batch_instance.start,
+            'batch_end': batch_instance.end
+        }
+        template = get_template(template_path)
+
+        return HttpResponse(template.render(context))
+
+
 class StudentDMCDownloadView(GenericAPIView):
     def get(self, request):
-        semester = int(request.GET.get('student_semester_instance__semester__semester', 0)) if int(
-            request.GET.get('student_semester_instance__semester__semester', None)) else None
+        semester = request.GET.get('student_semester_instance__semester__code', None)
         branch = request.GET.get('branch__code', None)
         batch = int(request.GET.get('batch__start', 0)) if request.GET.get('batch__start', None) else None
         default_sr_no = int(request.GET.get('default_sr_no', None)) if request.GET.get('default_sr_no', None) else None
@@ -326,12 +361,13 @@ class StudentDMCDownloadView(GenericAPIView):
         print(f'############### start sr {start_sr_no}')
         print(f'############### default value {default_sr_no}')
         subjects, students = _get_semester_data(semester, branch, batch, start_sr_no)
+        semester_number = Semester.objects.get(code=semester).semester
 
-        title = f'DMC Semester {semester} Branch {branch} Batch {batch}.pdf'
+        title = f'DMC Semester {semester_number} Branch {branch} Batch {batch}.pdf'
         full_branch = Branch.objects.get(code=branch).branch
-        year = batch + semester // 2
+        year = batch + semester_number // 2
 
-        if semester <= 4:
+        if semester_number <= 4:
             template_path = 'student/dmc/student_dmc_till_4_sem_template.html'
         else:
             template_path = 'student/dmc/student_dmc_after_4_sem_template.html'
@@ -340,8 +376,8 @@ class StudentDMCDownloadView(GenericAPIView):
             'students': students,
             'title': title,
             'branch': full_branch,
-            'semester': get_roman(semester),
-            'session': f'Nov./Dec., {year}' if semester % 2 else f'May./June., {year}',
+            'semester': get_roman(semester_number),
+            'session': f'Nov./Dec., {year}' if semester_number % 2 else f'May./June., {year}',
         }
         template = get_template(template_path)
 
