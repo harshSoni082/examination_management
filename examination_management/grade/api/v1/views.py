@@ -180,5 +180,5 @@ class GradeTemplateDownloadView(GenericAPIView):
             fp.seek(0)
             response = HttpResponse(fp,
                                     content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
-            response['Content-Disposition'] = f'attachment; filename={subject} grade sheet.xlsx'
+            response['Content-Disposition'] = f'attachment; filename={file_name} grade sheet.xlsx'
             return response
