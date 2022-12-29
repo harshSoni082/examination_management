@@ -128,7 +128,7 @@ class GradeDeleteView(GenericAPIView):
 class GradeTemplateDownloadView(GenericAPIView):
 
     def get(self, request):
-        semester = int(request.GET.get('semester_instance__semester__code', None))
+        semester = request.GET.get('semester_instance__semester__code', None)
         branch = request.GET.get('semester_instance__student__branch__code', None)
         batch = int(request.GET.get('semester_instance__student__batch__start', None))
         subject = request.GET.get('subject__code', None)
@@ -137,11 +137,11 @@ class GradeTemplateDownloadView(GenericAPIView):
 
         subject_instance = Subject.objects.get(code=subject)
         if not subject_instance.is_elective:
-            semester_instances = SemesterInstance.objects.filter(semester__semester=semester,
+            semester_instances = SemesterInstance.objects.filter(semester__code=semester,
                                                                  student__batch__start=batch,
                                                                  student__branch__code=branch)
         else:
-            semester_instances = SemesterInstance.objects.filter(semester__semester=semester,
+            semester_instances = SemesterInstance.objects.filter(semester__code=semester,
                                                                  student__batch__start=batch,
                                                                  student__branch__code=branch,
                                                                  elective=subject_instance)
