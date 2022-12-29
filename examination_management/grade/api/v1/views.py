@@ -132,29 +132,39 @@ class GradeTemplateDownloadView(GenericAPIView):
         branch = request.GET.get('semester_instance__student__branch__code', None)
         batch = int(request.GET.get('semester_instance__student__batch__start', None))
         subject = request.GET.get('subject__code', None)
-        if not (semester and branch and batch and subject):
+        if not (semester and branch and batch):
             return HttpResponseRedirect('../')
 
-        subject_instance = Subject.objects.get(code=subject)
-        if not subject_instance.is_elective:
-            semester_instances = SemesterInstance.objects.filter(semester__code=semester,
-                                                                 student__batch__start=batch,
-                                                                 student__branch__code=branch)
+        subjects = []
+        if not subject:
+            subject_instances = Semester.objects.get(code=semester).subject
+            for subject_instance in subject_instances.all():
+                subjects.append(subject_instance.code)
         else:
-            semester_instances = SemesterInstance.objects.filter(semester__code=semester,
-                                                                 student__batch__start=batch,
-                                                                 student__branch__code=branch,
-                                                                 elective=subject_instance)
+            subjects = [subject]
 
         students = []
         semester_instances_id = []
         subjects = []
         grades = []
-        for semester_instance in semester_instances.order_by('student__roll_no'):
-            students.append(semester_instance.student.roll_no)
-            semester_instances_id.append(semester_instance.id)
-            subjects.append(subject)
-            grades.append('')
+        for subject in subjects:
+            subject_instance = Subject.objects.get(code=subject)
+            if not subject_instance.is_elective:
+                semester_instances = SemesterInstance.objects.filter(semester__code=semester,
+                                                                     student__batch__start=batch,
+                                                                     student__branch__code=branch)
+            else:
+                semester_instances = SemesterInstance.objects.filter(semester__code=semester,
+                                                                     student__batch__start=batch,
+                                                                     student__branch__code=branch,
+                                                                     elective=subject_instance)
+
+
+            for semester_instance in semester_instances.order_by('student__roll_no'):
+                students.append(semester_instance.student.roll_no)
+                semester_instances_id.append(semester_instance.id)
+                subjects.append(subject)
+                grades.append('')
 
         data = {
             'student': students,
