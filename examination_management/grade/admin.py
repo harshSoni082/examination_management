@@ -33,7 +33,7 @@ class GradeAdmin(ImportExportModelAdmin):
 
     list_display = ('student__name', 'student__roll_no', 'student__batch',
                     'semester__semester', 'subject__code', 'grade')
-    list_filter = ('semester_instance__semester__semester', 'semester_instance__student__branch__code',
+    list_filter = ('semester_instance__semester__code', 'semester_instance__student__branch__code',
                    'semester_instance__student__batch__start', 'subject__code')
 
     change_list_template = 'grade/grade_change_list.html'
@@ -58,8 +58,8 @@ class GradeAdmin(ImportExportModelAdmin):
     def subject__code(self, obj):
         return obj.subject.code
 
-    def semester_instance__semester__semester(self, obj):
-        return obj.semester_instance.semester.semester
+    def semester_instance__semester__code(self, obj):
+        return obj.semester_instance.semester.code
 
     def subject__code(self, obj):
         return obj.subject.code

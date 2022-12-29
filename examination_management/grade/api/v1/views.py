@@ -128,7 +128,7 @@ class GradeDeleteView(GenericAPIView):
 class GradeTemplateDownloadView(GenericAPIView):
 
     def get(self, request):
-        semester = int(request.GET.get('semester_instance__semester__semester', None))
+        semester = int(request.GET.get('semester_instance__semester__code', None))
         branch = request.GET.get('semester_instance__student__branch__code', None)
         batch = int(request.GET.get('semester_instance__student__batch__start', None))
         subject = request.GET.get('subject__code', None)
@@ -150,7 +150,7 @@ class GradeTemplateDownloadView(GenericAPIView):
         semester_instances_id = []
         subjects = []
         grades = []
-        for semester_instance in semester_instances:
+        for semester_instance in semester_instances.order_by('student__roll_no'):
             students.append(semester_instance.student.roll_no)
             semester_instances_id.append(semester_instance.id)
             subjects.append(subject)
