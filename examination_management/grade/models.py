@@ -36,6 +36,10 @@ class Grade(StatusMixin, TimeStampedModel):
 
         self.semester_instance.update_cg_sum(old_subject_score=old_score, new_subject_score=new_score)
 
+    def delete(self, *args, **kwargs):
+        self.semester_instance.cg_sum -= self.score
+        super(Grade, self).delete(*args, **kwargs)
+
     def __str__(self):
         return str(self.id)
 
