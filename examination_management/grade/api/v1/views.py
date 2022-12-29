@@ -7,7 +7,7 @@ from rest_framework.response import Response
 
 from examination_management.grade.api.v1.serializers import GradeSerializer
 from examination_management.grade.models import Grade
-from examination_management.semester.models import SemesterInstance
+from examination_management.semester.models import SemesterInstance, Semester
 from examination_management.subject.models import Subject
 from examination_management.utils.utils import create_excel
 
@@ -135,19 +135,19 @@ class GradeTemplateDownloadView(GenericAPIView):
         if not (semester and branch and batch):
             return HttpResponseRedirect('../')
 
-        subjects = []
+        subjects_codes = []
         if not subject:
             subject_instances = Semester.objects.get(code=semester).subject
             for subject_instance in subject_instances.all():
-                subjects.append(subject_instance.code)
+                subjects_codes.append(subject_instance.code)
         else:
-            subjects = [subject]
+            subjects_codes = [subject]
 
         students = []
         semester_instances_id = []
         subjects = []
         grades = []
-        for subject in subjects:
+        for subject in subjects_codes:
             subject_instance = Subject.objects.get(code=subject)
             if not subject_instance.is_elective:
                 semester_instances = SemesterInstance.objects.filter(semester__code=semester,
