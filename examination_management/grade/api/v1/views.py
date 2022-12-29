@@ -135,12 +135,14 @@ class GradeTemplateDownloadView(GenericAPIView):
         if not (semester and branch and batch):
             return HttpResponseRedirect('../')
 
+        file_name = 'All'
         subjects_codes = []
         if not subject:
             subject_instances = Semester.objects.get(code=semester).subject
             for subject_instance in subject_instances.all():
                 subjects_codes.append(subject_instance.code)
         else:
+            file_name = subject
             subjects_codes = [subject]
 
         students = []
@@ -173,7 +175,7 @@ class GradeTemplateDownloadView(GenericAPIView):
             'grade': grades
         }
 
-        with tempfile.NamedTemporaryFile(prefix=f'{subject} grade sheet', suffix='.xlsx') as fp:
+        with tempfile.NamedTemporaryFile(prefix=f'{file_name} grade sheet', suffix='.xlsx') as fp:
             create_excel(path=fp.name, data=data)
             fp.seek(0)
             response = HttpResponse(fp,
