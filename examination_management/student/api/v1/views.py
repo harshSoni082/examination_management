@@ -261,15 +261,29 @@ class StudentResultTemplateDownloadView(GenericAPIView):
         semester = request.GET.get('student_semester_instance__semester__code', None)
         branch = request.GET.get('branch__code', None)
         batch = int(request.GET.get('batch__start', None))
+        default_sr_no = int(request.GET.get('default_sr_no', None)) if request.GET.get('default_sr_no', None) else None
 
-        if not (semester and branch and batch):
+        last_sr_no = SemesterInstance.objects.aggregate(Max('sr_no')).get('sr_no__max', None)
+        print(f'############### {last_sr_no}')
+        if (not (semester and branch and batch)) or not (default_sr_no or last_sr_no):
             return HttpResponseRedirect('../')
+
+        start_sr_no = default_sr_no
+        if last_sr_no and default_sr_no is None:
+            start_sr_no = last_sr_no + 1
+        print(f'############### start sr {start_sr_no}')
+        print(f'############### default value {default_sr_no}')
+        subjects, students = _get_semester_data(semester, branch, batch, start_sr_no)
+        semester_number = Semester.objects.get(code=semester).semester
+
+        # if not (semester and branch and batch):
+        #     return HttpResponseRedirect('../')
 
         branch_name = Branch.objects.get(code=branch)
         batch_instance = Batch.objects.get(start=batch)
-        semester_number = Semester.objects.get(code=semester).semester
+        # semester_number = Semester.objects.get(code=semester).semester
 
-        subjects, students = _get_semester_data(semester, branch, batch, 0)
+        # subjects, students = _get_semester_data(semester, branch, batch, 0)
 
         xlsx_name = f'Result Sheet {semester_number} Semester Batch {batch_instance.start}-{batch_instance.end}'
         with tempfile.NamedTemporaryFile(prefix=xlsx_name, suffix='.xlsx') as fp:
@@ -288,15 +302,29 @@ class StudentSemesterResultDownloadView(GenericAPIView):
         semester = request.GET.get('student_semester_instance__semester__code', None)
         branch = request.GET.get('branch__code', None)
         batch = int(request.GET.get('batch__start', None))
+        default_sr_no = int(request.GET.get('default_sr_no', None)) if request.GET.get('default_sr_no', None) else None
 
-        if not (semester and branch and batch):
+        last_sr_no = SemesterInstance.objects.aggregate(Max('sr_no')).get('sr_no__max', None)
+        print(f'############### {last_sr_no}')
+        if (not (semester and branch and batch)) or not (default_sr_no or last_sr_no):
             return HttpResponseRedirect('../')
+
+        start_sr_no = default_sr_no
+        if last_sr_no and default_sr_no is None:
+            start_sr_no = last_sr_no + 1
+        print(f'############### start sr {start_sr_no}')
+        print(f'############### default value {default_sr_no}')
+        subjects, students = _get_semester_data(semester, branch, batch, start_sr_no)
+        semester_number = Semester.objects.get(code=semester).semester
+
+        # if not (semester and branch and batch):
+        #     return HttpResponseRedirect('../')
 
         branch_name = Branch.objects.get(code=branch)
         batch_instance = Batch.objects.get(start=batch)
 
-        subjects, students = _get_semester_data(semester, branch, batch, 0)
-        semester_number = Semester.objects.get(code=semester).semester
+        # subjects, students = _get_semester_data(semester, branch, batch, 0)
+        # semester_number = Semester.objects.get(code=semester).semester
 
         xlsx_name = f'Result Sheet {semester_number} Semester Batch {batch_instance.start}-{batch_instance.end}'
         with tempfile.NamedTemporaryFile(prefix=xlsx_name, suffix='.xlsx') as fp:
