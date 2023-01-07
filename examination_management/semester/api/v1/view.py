@@ -280,7 +280,7 @@ class SemesterInstanceTemplateDownloadView(GenericAPIView):
         try:
             student_instances = Student.objects.filter(branch__code=branch,
                                                        batch__start=batch)
-            for student in student_instances.all():
+            for student in student_instances.order_by('roll_no').all():
                 data['student'].append(student.roll_no)
                 data['semester'].append('')
                 data['elective'].append('')

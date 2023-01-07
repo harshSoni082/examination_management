@@ -7,7 +7,7 @@ from rest_framework.response import Response
 
 from examination_management.grade.api.v1.serializers import GradeSerializer
 from examination_management.grade.models import Grade
-from examination_management.semester.models import SemesterInstance
+from examination_management.semester.models import SemesterInstance, Semester
 from examination_management.subject.models import Subject
 from examination_management.utils.utils import create_excel
 
@@ -128,33 +128,45 @@ class GradeDeleteView(GenericAPIView):
 class GradeTemplateDownloadView(GenericAPIView):
 
     def get(self, request):
-        semester = int(request.GET.get('semester_instance__semester__semester', None))
+        semester = request.GET.get('semester_instance__semester__code', None)
         branch = request.GET.get('semester_instance__student__branch__code', None)
         batch = int(request.GET.get('semester_instance__student__batch__start', None))
         subject = request.GET.get('subject__code', None)
-        if not (semester and branch and batch and subject):
+        if not (semester and branch and batch):
             return HttpResponseRedirect('../')
 
-        subject_instance = Subject.objects.get(code=subject)
-        if not subject_instance.is_elective:
-            semester_instances = SemesterInstance.objects.filter(semester__semester=semester,
-                                                                 student__batch__start=batch,
-                                                                 student__branch__code=branch)
+        file_name = 'All'
+        subjects_codes = []
+        if not subject:
+            subject_instances = Semester.objects.get(code=semester).subject
+            for subject_instance in subject_instances.all():
+                subjects_codes.append(subject_instance.code)
         else:
-            semester_instances = SemesterInstance.objects.filter(semester__semester=semester,
-                                                                 student__batch__start=batch,
-                                                                 student__branch__code=branch,
-                                                                 elective=subject_instance)
+            file_name = subject
+            subjects_codes = [subject]
 
         students = []
         semester_instances_id = []
         subjects = []
         grades = []
-        for semester_instance in semester_instances:
-            students.append(semester_instance.student.roll_no)
-            semester_instances_id.append(semester_instance.id)
-            subjects.append(subject)
-            grades.append('')
+        for subject in subjects_codes:
+            subject_instance = Subject.objects.get(code=subject)
+            if not subject_instance.is_elective:
+                semester_instances = SemesterInstance.objects.filter(semester__code=semester,
+                                                                     student__batch__start=batch,
+                                                                     student__branch__code=branch)
+            else:
+                semester_instances = SemesterInstance.objects.filter(semester__code=semester,
+                                                                     student__batch__start=batch,
+                                                                     student__branch__code=branch,
+                                                                     elective=subject_instance)
+
+
+            for semester_instance in semester_instances.order_by('student__roll_no'):
+                students.append(semester_instance.student.roll_no)
+                semester_instances_id.append(semester_instance.id)
+                subjects.append(subject)
+                grades.append('')
 
         data = {
             'student': students,
@@ -163,10 +175,10 @@ class GradeTemplateDownloadView(GenericAPIView):
             'grade': grades
         }
 
-        with tempfile.NamedTemporaryFile(prefix=f'{subject} grade sheet', suffix='.xlsx') as fp:
+        with tempfile.NamedTemporaryFile(prefix=f'{file_name} grade sheet', suffix='.xlsx') as fp:
             create_excel(path=fp.name, data=data)
             fp.seek(0)
             response = HttpResponse(fp,
                                     content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
-            response['Content-Disposition'] = f'attachment; filename={subject} grade sheet.xlsx'
+            response['Content-Disposition'] = f'attachment; filename={file_name} grade sheet.xlsx'
             return response

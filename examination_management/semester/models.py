@@ -26,8 +26,7 @@ class SemesterInstance(StatusMixin, TimeStampedModel):
                                  null=True, related_name='semester_semester_instance')
     student = models.ForeignKey('student.Student', on_delete=models.SET_NULL, blank=True,
                                 null=True, related_name='student_semester_instance')
-    elective = models.ManyToManyField('subject.Subject',blank=True,
-                                null=True, related_name='elective_semester_instance')
+    elective = models.ManyToManyField('subject.Subject',blank=True, related_name='elective_semester_instance')
 
     STATUS_CHOICES = (('A', 'Appearing'), ('P', 'Passed'), ('R', 'Reappear'))
     status = models.CharField(choices=STATUS_CHOICES, max_length=1, default='A')
@@ -64,7 +63,9 @@ class SemesterInstance(StatusMixin, TimeStampedModel):
         self.cg_sum -= old_subject_score
         self.cg_sum += new_subject_score
 
-        has_reappear = False
+        print(old_subject_score, new_subject_score)
+
+        has_reappear = False if new_subject_score > 0 else True
         try:
             grades = Grade.objects.filter(semester_instance=self.id)
             for grade in grades.all():

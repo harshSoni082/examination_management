@@ -80,34 +80,52 @@ class SemesterInstanceAdmin(ImportExportModelAdmin):
 
     @display(ordering='name', description='Name')
     def get_name(self, obj):
+        if not obj.student:
+            return None
         return obj.student.name
 
     @display(ordering='roll_no', description='Roll No')
     def get_roll_no(self, obj):
+        if not obj.student:
+            return None
         return obj.student.roll_no
 
     @display(ordering='semester', description='Semester')
     def get_semester(self, obj):
+        if not obj.semester:
+            return None
         return obj.semester.semester
 
     @display(ordering='batch', description='Batch')
     def get_batch(self, obj):
+        if not obj.student:
+            return None
         return obj.student.batch.start
 
     @display(ordering='branch', description='Branch')
     def get_branch(self, obj):
+        if not obj.student:
+            return None
         return obj.student.branch.code
 
     def student__roll_no(self, obj):
+        if not obj.student:
+            return None
         return obj.student.roll_no
 
     def semester__semester(self, obj):
+        if not obj.semester:
+            return None
         return obj.semester.semester
 
     def student__batch__start(self, obj):
+        if not obj.student:
+            return None
         return obj.student.batch.start
 
     def student__branch__code(self, obj):
+        if not obj.student:
+            return None
         return obj.student.branch.code
 
     def get_urls(self):

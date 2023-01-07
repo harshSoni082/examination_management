@@ -46,7 +46,7 @@ services:
     depends_on:
       - postgres
     ports:
-      - '8000:8000'
+      - '8888:8888'
     networks:
       - examination_management_network
     volumes:

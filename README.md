@@ -1,4 +1,4 @@
-# Examination Mangement Application
+# College Mangement System
 
 ![Python Version](https://img.shields.io/badge/python-v3.8-brightgreen)
 ![Django Version](https://img.shields.io/badge/django-v3.2-brightgreen)

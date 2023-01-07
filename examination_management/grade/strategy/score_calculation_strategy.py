@@ -17,11 +17,9 @@ class DefaultScoreCalculationStrategy(ScoreCalculationStrategy):
         elif grade == 'B':
             score = 8 * credit
         elif grade == 'C':
-            score = 7 * credit
-        elif grade == 'D':
             score = 6 * credit
-        elif grade == 'E':
-            score = 5 * credit
+        elif grade == 'D':
+            score = 4 * credit
         else:
             score = 0
         return score
