@@ -84,7 +84,7 @@ def _get_semester_data(semester, branch, batch, start_sr_no):
             'sr_no': start_sr_no if not semester_instance.sr_no and student.backlogs == 0 else semester_instance.sr_no
         }
 
-        if not semester_instance.sr_no and student.backlogs == 0:
+        if not semester_instance.sr_no and student.backlogs == 0 and start_sr_no is not None:
             semester_instance.sr_no = start_sr_no
             start_sr_no += 1
             semester_instance.save()
@@ -269,7 +269,7 @@ class StudentResultTemplateDownloadView(GenericAPIView):
         batch_instance = Batch.objects.get(start=batch)
         semester_number = Semester.objects.get(code=semester).semester
 
-        subjects, students = _get_semester_data(semester, branch, batch, 0)
+        subjects, students = _get_semester_data(semester, branch, batch, None)
 
         xlsx_name = f'Result Sheet {semester_number} Semester Batch {batch_instance.start}-{batch_instance.end}'
         with tempfile.NamedTemporaryFile(prefix=xlsx_name, suffix='.xlsx') as fp:
