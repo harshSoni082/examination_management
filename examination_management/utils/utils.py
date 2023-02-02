@@ -208,10 +208,10 @@ def create_result_excel(path, subjects, students, semester, branch_name, batch_s
         cell.alignment = Alignment(horizontal='center', vertical='center')
 
         # TODO: Calculate Serial Number
-        cell = sheet.cell(row=j+7,column=(2*len(subjects)+8))
-        cell.value = student.get('sr_no', '')
-        cell.font = Font(name="Times New Roman", size=11)
-        cell.alignment = Alignment(horizontal='center', vertical='center')
+        # cell = sheet.cell(row=j+7,column=(2*len(subjects)+8))
+        # cell.value = student.get('sr_no', '')
+        # cell.font = Font(name="Times New Roman", size=11)
+        # cell.alignment = Alignment(horizontal='center', vertical='center')
 
         cell = sheet.cell(row=j + 7, column=(2 * len(subjects) + 9))
         cell.value = student['reappear']

@@ -5,33 +5,10 @@
 {% block object-tools-items %}
     {{ block.super }}
 
-    <script type='text/javascript' src='https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js'></script>
-    <script type='text/javascript'>
-        $(document).ready(() => {
-                $('#dmc_ref').on('click', () => {
-                    let url = $('#dmc_ref').attr('href');
-                    url += '&default_sr_no=' + $('input[name=default_sr_no]').val()
-                    const link = document.createElement('a');
-                    link.href = url;
-                    link.target = '_blank'
-                    document.body.appendChild(link);
-                    link.click();
-                })
-            }
-        )
-    </script>
-
     <div class="btn-group float-right my-2">
         <a href="{% url 'admin:student_result_download' %}?student_semester_instance__semester__code={{ request.GET.student_semester_instance__semester__code }}&branch__code={{ request.GET.branch__code }}&batch__start={{ request.GET.batch__start__exact }}" class="btn btn-outline-success">Download Result</a>
         <a href="{% url 'admin:semester_result_download' %}?student_semester_instance__semester__code={{ request.GET.student_semester_instance__semester__code }}&branch__code={{ request.GET.branch__code }}&batch__start={{ request.GET.batch__start__exact }}" class="btn btn-outline-secondary" target="_blank">Download Final Result</a>
         <a id="dmc_ref" href="{% url 'admin:student_dmc_download' %}?student_semester_instance__semester__code={{ request.GET.student_semester_instance__semester__code }}&branch__code={{ request.GET.branch__code }}&batch__start={{ request.GET.batch__start__exact }}" class="btn btn-outline-secondary" target="_blank">Download DMC</a>
         <a href="{% url 'admin:student_template_download' %}" class="btn btn-outline-primary">Download Template</a>
     </div>
-
-    <input
-           type="number"
-           name="default_sr_no"
-           placeholder="Enter Last printed Sr. No + 1"
-           style="width: 100%"
-        />
 {% endblock %}

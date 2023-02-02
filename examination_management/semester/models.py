@@ -31,7 +31,7 @@ class SemesterInstance(StatusMixin, TimeStampedModel):
     STATUS_CHOICES = (('A', 'Appearing'), ('P', 'Passed'), ('R', 'Reappear'))
     status = models.CharField(choices=STATUS_CHOICES, max_length=1, default='A')
     cg_sum = models.IntegerField(_('CG Sum'), default=0)
-    sr_no = models.IntegerField(_('Sr. No.'), blank=True, null=True, unique=True, db_index=True)
+    # sr_no = models.IntegerField(_('Sr. No.'), blank=True, null=True, unique=True, db_index=True)
 
     def save(self, *args, **kwargs):
         semester = self.semester.semester

@@ -19,7 +19,7 @@ from examination_management.student.models import Student
 from examination_management.utils.utils import create_empty_excel, create_result_excel, get_roman
 
 
-def _get_semester_data(semester, branch, batch, start_sr_no):
+def _get_semester_data(semester, branch, batch):
     subjects = {}
     subject_instances = Subject.objects.filter(subject_semester__code=semester)
     semester_number = Semester.objects.get(code=semester).semester
@@ -81,13 +81,8 @@ def _get_semester_data(semester, branch, batch, start_sr_no):
             'sgpa': sgpa,
             'reappear': reappear,
             'backlogs': student.backlogs,
-            'sr_no': start_sr_no if not semester_instance.sr_no and student.backlogs == 0 else semester_instance.sr_no
+            'sr_no': ''
         }
-
-        if not semester_instance.sr_no and student.backlogs == 0 and start_sr_no is not None:
-            semester_instance.sr_no = start_sr_no
-            start_sr_no += 1
-            semester_instance.save()
 
         if semester_number > 4:
             # For previous semesters
@@ -324,7 +319,7 @@ class SemesterResultTemplateDownloadView(GenericAPIView):
         batch_instance = Batch.objects.get(start=batch)
         year = batch + semester_number // 2
 
-        subjects, students = _get_semester_data(semester, branch, batch, 0)
+        subjects, students = _get_semester_data(semester, branch, batch)
         semester_number = Semester.objects.get(code=semester).semester
 
         title = f'Final Result Sheet {semester_number} Semester Batch {batch_instance.start}-{batch_instance.end}'
@@ -349,19 +344,11 @@ class StudentDMCDownloadView(GenericAPIView):
         semester = request.GET.get('student_semester_instance__semester__code', None)
         branch = request.GET.get('branch__code', None)
         batch = int(request.GET.get('batch__start', 0)) if request.GET.get('batch__start', None) else None
-        default_sr_no = int(request.GET.get('default_sr_no', None)) if request.GET.get('default_sr_no', None) else None
 
-        last_sr_no = SemesterInstance.objects.aggregate(Max('sr_no')).get('sr_no__max', None)
-        print(f'############### {last_sr_no}')
-        if (not (semester and branch and batch)) or not (default_sr_no or last_sr_no):
+        if not (semester and branch and batch):
             return HttpResponseRedirect('../')
 
-        start_sr_no = default_sr_no
-        if last_sr_no and default_sr_no is None:
-            start_sr_no = last_sr_no + 1
-        print(f'############### start sr {start_sr_no}')
-        print(f'############### default value {default_sr_no}')
-        subjects, students = _get_semester_data(semester, branch, batch, start_sr_no)
+        subjects, students = _get_semester_data(semester, branch, batch)
         semester_number = Semester.objects.get(code=semester).semester
 
         title = f'DMC Semester {semester_number} Branch {branch} Batch {batch}.pdf'
