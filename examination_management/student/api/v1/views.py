@@ -81,7 +81,7 @@ def _get_semester_data(semester, branch, batch):
             'sgpa': sgpa,
             'reappear': reappear,
             'backlogs': student.backlogs,
-            'sr_no': '       '
+            'sr_no': ''
         }
 
         if semester_number > 4:
