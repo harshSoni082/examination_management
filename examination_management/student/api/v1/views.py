@@ -70,7 +70,7 @@ def _get_semester_data(semester, branch, batch):
                     'score': 0
                 }
 
-        print(f'############### {semester_instance.sr_no}')
+        # print(f'############### {semester_instance.sr_no}')
         students[student.roll_no] = {
             'name': student.name,
             'fathers_name': student.fathers_name,
