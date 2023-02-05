@@ -37,8 +37,8 @@ class Student(StatusMixin, TimeStampedModel):
 
     def save(self, *args, **kwargs):
         self.name = self.name.title()
-        self.fathers_name = self.fathers_name.title()
-        self.mothers_name = self.mothers_name.title()
+        self.fathers_name = self.fathers_name.title() if self.fathers_name else None
+        self.mothers_name = self.mothers_name.title() if self.mothers_name else None
 
         super().save(*args, **kwargs)
 
