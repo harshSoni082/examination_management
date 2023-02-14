@@ -48,8 +48,8 @@ def _get_semester_data(semester, branch, batch):
                 credit += subject.credit
         for elective in semester_instance.elective.all():
             credit += elective.credit
-        sgpa = round(semester_instance.cg_sum / credit, 4)
 
+        cg_sum = 0
         grades = OrderedDict()
         reappear = []
         grade_instances = Grade.objects.filter(semester_instance=semester_instance.id)
@@ -58,10 +58,12 @@ def _get_semester_data(semester, branch, batch):
                 'grade': grade.grade,
                 'score': grade.score / 1
             }
+            cg_sum += grade.score
 
             if grade.grade and grade.grade >= 'F':
                 reappear.append(grade.subject.code)
         reappear = ','.join(reappear)
+        sgpa = round(cg_sum / credit, 4)
 
         for subject in subject_instances.all():
             if not grades.get(subject.code, None):
@@ -77,7 +79,7 @@ def _get_semester_data(semester, branch, batch):
             'roll_no': student.roll_no,
             'grades': grades,
             'total_credit': credit / 1,
-            'cg_sum': semester_instance.cg_sum / 1,
+            'cg_sum': cg_sum / 1,
             'sgpa': sgpa,
             'reappear': reappear,
             'backlogs': student.backlogs,
@@ -100,10 +102,16 @@ def _get_semester_data(semester, branch, batch):
                         curr_credit += subject.credit
                 for elective in semester_instance.elective.all():
                     curr_credit += elective.credit
+
+                cg_sum = 0
+                grade_instances = Grade.objects.filter(semester_instance=semester_instance.id)
+                for grade in grade_instances:
+                    cg_sum += grade.score
+
                 total_credits += curr_credit
 
-                sgpa = round(semester_instance.cg_sum / curr_credit, 4)
-                cgpa += semester_instance.cg_sum
+                sgpa = round(cg_sum / curr_credit, 4)
+                cgpa += cg_sum
                 year = batch + sem_no // 2
                 prev_semesters[sem_no] = {
                     'session': f'Nov./Dec., {year}' if sem_no % 2 else f'May./June., {year}',

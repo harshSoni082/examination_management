@@ -29,15 +29,15 @@ class Grade(StatusMixin, TimeStampedModel):
         # 4. Save the semester_instance
         # 5. Save the grade instance
 
-        old_score = self.score or 0
+        # old_score = self.score or 0
         self.score = score_calculator.calculate(self.subject.credit, self.grade)
-        new_score = self.score
+        # new_score = self.score
         super(Grade, self).save(*args, **kwargs)
 
-        self.semester_instance.update_cg_sum(old_subject_score=old_score, new_subject_score=new_score)
+        # self.semester_instance.update_cg_sum(old_subject_score=old_score, new_subject_score=new_score)
 
     def delete(self, *args, **kwargs):
-        self.semester_instance.cg_sum -= self.score
+        # self.semester_instance.cg_sum -= self.score
         super(Grade, self).delete(*args, **kwargs)
 
     def __str__(self):
