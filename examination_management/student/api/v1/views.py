@@ -92,10 +92,11 @@ def _get_semester_data(semester, branch, batch):
             prev_semesters = {}
             total_credits = 0
             cgpa = 0
-            for semester_instance in semester_instances:
+            for semester_instance in semester_instances.all():
                 curr_credit = 0
                 sem_no = semester_instance.semester.semester
-                if sem_no > semester:
+                curr_sem = Semester.objects.get(code=semester)
+                if sem_no > curr_sem.semester:
                     continue
                 for subject in semester_instance.semester.subject.all():
                     if not subject.is_elective:
