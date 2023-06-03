@@ -1,0 +1,142 @@
+*****************************************************
+
+Step 0 - 
+when installing this software on a new PC -
+
+Software is loacted at D drive in mann laptop 
+
+Place this software on the desktop
+cd to Desktop and then cd to Examination _management 
+
+C:\Users\Mann\Desktop\examination_management> docker-compose -f local.yml up
+
+
+
+Step 1. First take a database .sql file from previous Docker 
+	Login to data base with following credentials 
+System- postgresql
+Server- postgres
+Username- admin
+password- admin
+Database- examination_management
+
+Go to Export --> Frmat is sql 
+
+2.  Step 2 
+
+Download Docker and install after that open cmd and do following 
+open any foldwe on the desktop and write cmd un url
+no cd .. to desktop and the cd to examination_management
+the run folllowing command ! Note docker should be running 
+C:\Users\Mann\Desktop\examination_management> docker-compose -f local.yml up
+
+Once serever starts dubm the database once uisng followimg credentials
+ Sysytem- postgresql
+Server- postgres
+Username- admin
+password- admin
+Database- examination_management
+
+Import the data base that you have down.oaded previously to this new laptop
+
+
+
+Steo 3-- First step is Creat Batches
+
+Step 4- Create Branch 
+
+Step 5- Add Subjects 
+
+Step 6- Ad Semester
+
+Step 7 - Add students ( One time acivity for fresh students )
+
+Step 8 - Add semester instance ( repetataive activity every time a student get enrolled in a semseter ) 
+
+
+Step 9 - Add grades
+
+Step 10 - Go to students to Download result 
+
+
+**************************************************************************
+ Fresh Inastalltion on new Sysytem 
+
+
+https://www.docker.com/products/docker-desktop/
+Download Docker and install after that open cmd and do following 
+open any foldwe on the desktop and write cmd un url
+no cd .. to desktop and the cd to examination_management
+the run folllowing command ! Note docker should be running 
+C:\Users\Mann\Desktop\examination_management> docker-compose -f local.yml up
+
+Once serever starts dubm the database once uisng followimg credentials
+ Sysytem- postgresql
+Server- postgres
+Username- admin
+password- admin
+Database- examination_management
+
+****************************
+Starting Docker
+in Powershell write 
+ >> net start vmcompute
+>> wsl --set-default-version 2
+
+ow open Docker 
+
+
+To work from scratch 
+delete all things from container in docker 
+
+C:\Users\Mann\Desktop\examination_management> docker container rm $(docker container ls -a)
+C:\Users\Mann\Desktop\examination_management> docker rm -f $(docker volume ls)
+
+
+agian isntal everything
+C:\Users\Mann\Desktop\examination_management> docker-compose -f local.yml up
+
+How to share your container with others
+
+First Lets create a docker container from an image 
+> docker run --name mysoftware imagename:latest
+
+Then see if container is created or not 
+> docker ps 
+note down the id of running continer suppose it is 345
+now you have to first make image of this runnig container in order to oush it to docer hub
+
+> docker commit 345 usernameofdockerhub/directorry_on_which_you wish to store the imgae : any tag name
+
+> docker commit 345 mukesh311a/Examsoftware: latest
+
+Lets see what image it has created 
+> dockre image 
+
+now push that image to docer hub 
+>docker push imageName: tagname   --> docker push mukesh311a/Examsoftware: latest
+
+Now take a pull or directly run the command as
+
+>docker run --name examination_sofware mukesh311/exams_django
+
+>docker run --name adminer  mukesh311/adminer
+
+>docker run --name postgres mukesh311/postgres
+
+**********************************************************
+
+You can download the mysql data base and then on a new laptop just place the examination_management code n desktopn and then cd to exam
+
+cd to examnation_maagement 
+then run following command 
+>docker compose -f local.yml.up
+
+open localhost:8080
+
+put all credentials  as described above
+
+now delete the data base examination_management and then again create a  fresh dtabase weith the name examination _mamanehemet
+now upload the .sql file to this data base .
+
+Always take database backup to loacl drive once the semeesnetr is over so that you can easly migrate from one to other laptop easily
